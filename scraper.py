@@ -24,6 +24,7 @@ def scrape(url):
     options = Options()
     options.add_argument('--headless=new')
     options.add_argument('--no-sandbox')
+    options.add_argument("--window-size=2560,1600")
     driver = webdriver.Chrome(options=options)
     driver.get(url)
 
@@ -38,16 +39,24 @@ def scrape(url):
 
 
     if not is_story_or_post:
+        max_retry = 3
+        current_retry = 0
         while True:
             try:
                 view_more_button = driver.find_element(By.CSS_SELECTOR, ".html-div .html-div [role='button'][tabindex='0']:not([aria-label='Identity badges']):not([aria-label='1 reaction; see who reacted to this'])")
                 view_more_button.click()
                 print("Clicked 'View more comments' button.")
-                sleep(1.5)
+                if current_retry > 0:
+                    current_retry = 0
             except NoSuchElementException as e:
                 print(f"Error clicking 'View more comments' button: {e}")
-                break
-
+                if current_retry >= max_retry:
+                    print("Max retries reached, breaking the loop.")
+                    break
+                current_retry += 1
+                print(f"Retrying {current_retry}/{max_retry}...")
+            sleep(1.5)
+            
     result = []
     if not is_story_or_post:
         comments = driver.find_elements(By.CSS_SELECTOR, "[role='article']")

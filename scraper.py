@@ -23,6 +23,7 @@ def scrape(url):
     print(f"Scraping URL: {url}")
     options = Options()
     options.add_argument('--headless=new')
+    options.add_argument('--no-sandbox')
     driver = webdriver.Chrome(options=options)
     driver.get(url)
 

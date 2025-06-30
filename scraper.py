@@ -20,7 +20,7 @@ def find_elements_by_css_selector_from_an_element(element, selector):
         return None
 
 def scrape(url):
-
+    print(f"Scraping URL: {url}")
     options = Options()
     options.add_argument('--headless=new')
     driver = webdriver.Chrome(options=options)

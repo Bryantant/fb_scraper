@@ -29,8 +29,8 @@ class Scrape(BaseModel):
     url: str
 
 @app.post("/scrape/")
-def scrape(scrape: Scrape):
-    if not scrape.url:
+def scrape(url: str):
+    if not url:
         raise HTTPException(status_code=400, detail="URL is required")
-    result = scraper.scrape(scrape.url)
+    result = scraper.scrape(url)
     return result
